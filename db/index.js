@@ -1,11 +1,16 @@
-const { Client } = require('pg') // imports the pg module
+/*
+///////////////////
+// Dependencies //
+/////////////////
+*/
 
+const { Client } = require('pg');
 const client = new Client('postgres://localhost:5432/juicebox-dev');
 
 /*
-/////
-USER Methods
-/////
+///////////////////
+// USER Methods //
+/////////////////
 */
 
 async function createUser({ username, password, name, location }) {
@@ -20,8 +25,8 @@ async function createUser({ username, password, name, location }) {
         return user;
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function updateUser(id, fields = {}) {
     // build the set string
@@ -45,8 +50,8 @@ async function updateUser(id, fields = {}) {
         return user;
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function getAllUsers() {
     try {
@@ -58,8 +63,8 @@ async function getAllUsers() {
         return rows;
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function getUserById(userId) {
     try {
@@ -78,15 +83,13 @@ async function getUserById(userId) {
         return user;
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
-
-
-/* 
-/////
-Post Methods 
-/////
+/*
+///////////////////
+// POST Methods //
+/////////////////
 */
 
 async function createPost({ authorId, title, content, tags = [] }) {
@@ -102,8 +105,8 @@ async function createPost({ authorId, title, content, tags = [] }) {
         return await addTagsToPost(post.id, tagList);
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function updatePost(postId, fields = {}) {
     // Read off the tags and remove that field
@@ -186,8 +189,8 @@ async function getPostsByUser(userId) {
         return posts;
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function getPostById(postId) {
     try {
@@ -239,12 +242,10 @@ async function getPostsByTagName(tagName) {
     };
 };
 
-
-
 /*
-/////
-Tag Methods
-/////
+//////////////////
+// TAG Methods //
+////////////////
 */
 
 async function createTags(tagList) {
@@ -277,6 +278,19 @@ async function createTags(tagList) {
     };
 };
 
+async function getAllTags() {
+    try {
+        const { rows } = await client.query(`
+            SELECT * 
+            FROM tags;
+        `);
+
+        return rows;
+    } catch (error) {
+        throw error;
+    };
+};
+
 async function createPostTag(postId, tagId) {
     try {
         await client.query(`
@@ -286,8 +300,8 @@ async function createPostTag(postId, tagId) {
         `, [postId, tagId]);
     } catch (error) {
         throw error;
-    }
-}
+    };
+};
 
 async function addTagsToPost(postId, tagList) {
     try {
@@ -303,6 +317,12 @@ async function addTagsToPost(postId, tagList) {
     };
 };
 
+/*
+/////////////
+// Export //
+///////////
+*/
+
 module.exports = {  
     client,
     createUser,
@@ -316,6 +336,7 @@ module.exports = {
     getPostById,
     getPostsByTagName,
     createTags,
+    getAllTags,
     createPostTag,
     addTagsToPost
-}
+};
