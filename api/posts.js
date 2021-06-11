@@ -59,7 +59,7 @@ postsRouter.get('/', async (req, res, next) => {
         const allPosts = await getAllPosts();
 
         const posts = allPosts.filter(post => {
-            return (post.active && post.author.active) || ((req.user) && (req.user.active && post.author.id === req.user.id));
+            return (post.active && post.author.active !== false) || ((req.user) && (req.user.active && post.author.id === req.user.id));
         });
 
         res.send({
@@ -71,7 +71,7 @@ postsRouter.get('/', async (req, res, next) => {
 });
 
 // Update
-postsRouter.patch('/:postId', requireUser, requireActiveUser, async (req, res, next) => {
+postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
     const { postId } = req.params;
     const { title, content, tags } = req.body;
 

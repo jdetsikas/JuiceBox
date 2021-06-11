@@ -15,6 +15,7 @@ if (process.env.DATABASE_URL) {
 
 const client = new Client(config);
 
+
 /*
 ///////////////////
 // USER Methods //

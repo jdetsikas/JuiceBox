@@ -10,6 +10,7 @@ const { client } = require('./db');
 client.connect();
 
 const { PORT = 3000 } = process.env;
+// const PORT = 1313
 const express = require('express');
 const server = express();
 
