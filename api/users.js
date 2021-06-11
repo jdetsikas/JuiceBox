@@ -22,6 +22,7 @@ usersRouter.use((req, res, next) => {
     next();
 });
 
+// Read
 usersRouter.get('/', async (req, res) => {
     const users = await getAllUsers();
 
@@ -30,6 +31,7 @@ usersRouter.get('/', async (req, res) => {
     });
 });
 
+// Create
 usersRouter.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
 
@@ -59,6 +61,7 @@ usersRouter.post('/login', async (req, res, next) => {
     };
 });
 
+// Create
 usersRouter.post('/register', async (req, res, next) => {
     const { username, password, name, location } = req.body;
 

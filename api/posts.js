@@ -22,22 +22,7 @@ postsRouter.use((req, res, next) => {
     next();
 });
 
-postsRouter.get('/', async (req, res) => {
-    try {
-        const allPosts = await getAllPosts();
-
-        const posts = allPosts.filter(post => {
-            return post.active || (req.user && post.author.id === req.user.id);
-        });
-
-        res.send({
-            "posts": [...posts]
-        });
-    } catch ({ name, message }) {
-        next({ name, message });
-    };
-});
-
+// Create
 postsRouter.post('/', requireUser, async (req, res, next) => {
     const { title, content, tags = "" } = req.body;
 
@@ -68,6 +53,24 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
     };
 });
 
+// Read
+postsRouter.get('/', async (req, res) => {
+    try {
+        const allPosts = await getAllPosts();
+
+        const posts = allPosts.filter(post => {
+            return post.active || (req.user && post.author.id === req.user.id);
+        });
+
+        res.send({
+            "posts": [...posts]
+        });
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+// Update
 postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
     const { postId } = req.params;
     const { title, content, tags } = req.body;
@@ -103,6 +106,7 @@ postsRouter.patch('/:postId', requireUser, async (req, res, next) => {
     };
 });
 
+// Delete
 postsRouter.delete('/:postId', requireUser, async (req, res, next) => {
     try {
         const post = await getPostById(req.params.postId);

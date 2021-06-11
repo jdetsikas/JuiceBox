@@ -20,6 +20,7 @@ tagsRouter.use((req, res, next) => {
     next();
 });
 
+// Read
 tagsRouter.get('/', async (req, res) => {
     const tags = await getAllTags();
 
@@ -28,6 +29,7 @@ tagsRouter.get('/', async (req, res) => {
     });
 });
 
+// Read
 tagsRouter.get('/:tagName/posts', async (req, res, next) => {
     const tag = req.params.tagName
 
