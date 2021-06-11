@@ -8,7 +8,8 @@ const express = require('express');
 const usersRouter = express.Router();
 const jwt = require('jsonwebtoken');
 
-const { getAllUsers, getUserByUsername, createUser } = require('../db');
+const { getAllUsers, getUserByUsername, createUser, updateUser, getUserById } = require('../db');
+const { requireUser, requireActiveUser } = require('./utils');
 
 /*
 ////////////////
@@ -84,6 +85,52 @@ usersRouter.post('/register', async (req, res, next) => {
         next({ name, message });
     };
 });
+
+// Update
+usersRouter.patch('/:userId', requireUser, async (req, res, next) => {
+    try {
+        const user = await getUserById(req.params.userId);
+
+        if (user && user.id === req.user.id) {
+            const updatedUser = updateUser(user.id, { active: true });
+
+            res.send({ user: updatedUser });
+        } else {
+            next(user ? {
+                name: "UnauthorizedUserError",
+                message: "You cannot delete another user, jerk"
+            } : {
+                name: "UserNotFoundError",
+                message: "That user does not exist"
+            });
+        };
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+// Delete
+usersRouter.delete('/:userId', requireUser, requireActiveUser, async (req, res, next) => {
+    try {
+        const user = await getUserById(req.params.userId);
+
+        if (user && user.id === req.user.id) {
+            const updatedUser = updateUser(user.id, { active: false });
+
+            res.send({ user: updatedUser });
+        } else {
+            next(user ? {
+                name: "UnauthorizedUserError",
+                message: "You cannot delete another user, jerk"
+            } : {
+                name: "UserNotFoundError",
+                message: "That user does not exist"
+            });
+        };
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+})
 
 /*
 /////////////
